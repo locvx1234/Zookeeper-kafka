@@ -199,8 +199,46 @@ Nhưng các message vẫn khả dụng cho từng consume mặc dù leader thay 
 	$ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic my-replicated-topic
 	
 
-
 ## 2.6 Sử dụng Kafka Connect để import/export data
+
+Ghi dữ liệu và nhân dữ liệu là một cách đơn giản để bắt đầu. Nhưng chúng ta sẽ muốn sử dụng dữ liệu từ một nguồn khác và xuất ra từ Kafka tới các hệ thống khác.
+
+Sử dụng Kafka Connect để làm được điều này.
+
+Đầu tiên, tạo một file data để test:
+
+	$  echo -e "foo\nbar" > test.txt
+	
+Chúng ta sẽ khởi độnng 2 connector chạy chế độ `standalone`. Có 3 file cấu hình : một file cho tiến trình  Kafka Connect , chứa cấu hình chung để kết nối, định dạng dữ liệu. Hai file còn lại, mỗi file xác định một kết nối được tạo.
+
+	$ bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
+
+File `connect-file-source.properties` là source connector, nó đọc các dòng từ một file input và thực hiện produce tới topic
+
+File `connect-file-sink.properties` là  sink connector, nó đọc các message từ Kafka topic.
+
+Các file cấu hình mẫu này sử dụng cấu hình mặc đinh. Khi Kafka Connect, source connector đọc các dingf từ `test.txt` và produce chúng tới topic `connect-test`. Sau đó sink connector  sẽ đọc các message từ topic `connect-test` và ghi vào file `test.sink.txt` 
+
+Xem file `test.sink.txt`  để thấy dữ liệu đã được ghi : 
+
+	$ cat test.sink.txt
+
+Chúng ta có thể xem data trong topic bằng console consume :
+
+	$ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic connect-test --from-beginning
+	
+Các connector vẫn tiếp tục xử lý dữ liệu, nên chúng ta có thể thêm dữ liệu để xem sự thay đổi :
+
+	$ echo "Another line" >> test.txt
+	
+Bạn sẽ nhìn thấy sự thay đổi trong output của console consume và file sink.
+
+
+
+
+
+
+
 
 // TODO
 https://kafka.apache.org/quickstart#quickstart_kafkaconnect

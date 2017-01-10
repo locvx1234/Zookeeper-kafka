@@ -233,22 +233,55 @@ Các connector vẫn tiếp tục xử lý dữ liệu, nên chúng ta có thể
 	
 Bạn sẽ nhìn thấy sự thay đổi trong output của console consume và file sink.
 
-
-
-
-
-
-
-
-// TODO
-https://kafka.apache.org/quickstart#quickstart_kafkaconnect
-
-
 ## 2.7 Sử dụng Kafka Stream để xử lý dữ liệu 
 
+Kafka Stream là một library để xử lý dòng theo thời gian thực và phân tích dữ liệu được lưu trữ trong Kafka broker. 
+
+Ví dụ `WordCountDemo` 
 
 
+	KTable wordCounts = textLines
+		// Split each text line, by whitespace, into words.
+		.flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+
+		// Ensure the words are available as record keys for the next aggregate operation.
+		.map((key, value) -> new KeyValue<>(value, value))
+
+		// Count the occurrences of each word (record key) and store the results into a table named "Counts".
+		.countByKey("Counts")
+		
+Chuẩn bị một số input để sử dụng với Kafka Stream:
+
+	$  echo -e "all streams lead to kafka\nhello kafka streams\njoin kafka summit" > file-input.txt
 	
+Bây giờ sẽ gửi đến làm input cho topic ` streams-file-input` sử dụng  console producer:
+
+
+	$ bin/kafka-topics.sh --create \
+            --zookeeper localhost:2181 \
+            --replication-factor 1 \
+            --partitions 1 \
+            --topic streams-file-input
+			
+	$ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic streams-file-input < file-input.txt
+	
+Chạy demo WordCount  để xử lý input: 
+
+
+	$ bin/kafka-run-class.sh org.apache.kafka.streams.examples.wordcount.WordCountDemo
+	
+Output sẽ liên tục ghi vào trong một topic khác tên là `streams-wordcount-output` trong Kafka. 
+
+Xem output nhân được trong topic `stream-wordcount-output`:
+
+	$ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+            --topic streams-wordcount-output \
+            --from-beginning \
+            --formatter kafka.tools.DefaultMessageFormatter \
+            --property print.key=true \
+            --property print.value=true \
+            --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+            --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
 
 *Tham khảo*
 

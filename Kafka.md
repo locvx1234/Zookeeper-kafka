@@ -6,7 +6,7 @@
 
 Kafka là một nền tảng luồng phân tán. 
 
-####Nền tảng luồng có 3 khả năng : 
+#### Nền tảng luồng có 3 khả năng : 
 	
 1. Publish và subcribe các dòng bản ghi. Trong khía cạnh này, nó tương tự một hàng đợi message 
 2. Lưu trữ các luồng bản ghi có khả năng chịu lỗi 
@@ -16,7 +16,7 @@ Kafka có thể hiểu là một hệ thống logging, lưu lại các trạng t
 	
 Message của Kafka được lưu trên đĩa cứng và được replicate trong cluster phòng tránh mất dữ liệu. 
 
-####Một vài khái niệm: 
+#### Một vài khái niệm: 
 
 - Kafka chạy như một cluster trên một hoặc nhiều server, mỗi server được gọi là `broker`.
 - Kafka cluster lưu trữ, phân loại các message trong categories gọi là `topics`.
@@ -27,7 +27,7 @@ Message của Kafka được lưu trên đĩa cứng và được replicate tron
 <img src="https://raw.githubusercontent.com/locvx1234/Zookeeper-kafka/master/image/kafka_cluster.png">
 	
 	
-####Topic	
+#### Topic	
 
 Topic có thể coi là trung gian giữa producers và consumers. Topic luôn luôn là multi-subcriber, một topic có thể có 0, 1, hoặc nhiều consumer mà subcribe các dữ liệu ghi vào nó.
 
@@ -43,15 +43,15 @@ Kafka Cluster chứa tất cả các message đã publish (đã hoặc chưa con
 
 <img src="https://github.com/locvx1234/Zookeeper-kafka/blob/master/image/log_consumer.png">
 
-####Producer
+#### Producer
 
 Producer sẽ publish các message vào topic. Producer có trách nhiệm lựa chọn message để gán cho partition nào trong topic. Điều này được thực hiện theo cách xoay vòng để cân bằng tải.
 
 <img src="https://github.com/locvx1234/Zookeeper-kafka/blob/master/image/producer.png">
 
-####Consumer 
+#### Consumer 
 
-Consumer gắn nhãn cho chính nó với một têm nhóm người dùng, và mỗi message được publish đến một topic được gửi đến một consumer instance trong mỗi consumer group được subcribe. Các consumer instance có thể trên các tiến trình riêng hoặc trên các máy riêng biệt.
+Consumer gắn nhãn cho chính nó với một tên nhóm người dùng, và mỗi message được publish đến một topic được gửi đến một consumer instance trong mỗi consumer group được subcribe. Các consumer instance có thể trên các tiến trình riêng hoặc trên các máy riêng biệt.
 
 Nếu tất cả các consumer instance có cùng consumer group, các message sẽ có hiệu quả cân bằng trong các consumer instance. (Queuing)
 

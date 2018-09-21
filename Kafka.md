@@ -142,7 +142,7 @@ Chúng ta đã có Zookeeper và 1 node đã start, bây giờ cần start 2 nod
 	$ bin/kafka-server-start.sh config/server-2.properties &
 	
 
-Bây giờ tạp một topic mới với replication factor : 3
+Bây giờ tạo một topic mới với replication factor : 3
 
 	$ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 1 --topic my-replicated-topic
 	
@@ -150,7 +150,7 @@ Xem thông tin về cluster:
 
 	$ bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic my-replicated-topic
 	
-<img src="">
+<img src="https://raw.githubusercontent.com/locvx1234/Zookeeper-kafka/master/image/multil-broker.png">
 
 Dòng đầu tiên là tổng quan về tất cả các partition. 
 
